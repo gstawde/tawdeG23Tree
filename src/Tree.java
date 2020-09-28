@@ -2,6 +2,7 @@ import java.util.TreeSet;
 
 interface TwoThreeTree {
     public boolean insert(int x);
+
     public int size(int x);
 }
 
@@ -25,7 +26,7 @@ public class Tree implements TwoThreeTree {
         }
         Node current = root;
         // while we haven't reached an end point,
-        while(true) {
+        while (true) {
             if (current.contains(x)) {
                 return false;
             }

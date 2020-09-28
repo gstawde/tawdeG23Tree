@@ -1,8 +1,6 @@
-import org.junit.Before;
 import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertSame;
 
 public class TreeTests {
 
@@ -116,6 +114,15 @@ public class TreeTests {
         nums.insert(10);
         nums.insert(5);
         nums.toString();
+    }
+
+    @Test
+    public void testIsLeaf2Node() {
+        Tree nums = new Tree();
+        nums.insert(1);
+        assertEquals(true, nums.getRoot().isLeaf());
+        nums.insert(2);
+        assertEquals(true, nums.getRoot().isLeaf());
     }
 
     @Test
