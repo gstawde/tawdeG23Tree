@@ -1,6 +1,7 @@
 import org.junit.Test;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 public class TreeTests {
 
@@ -12,6 +13,20 @@ public class TreeTests {
         nums.insert(5);
         System.out.println(nums.toString());
         assertEquals(1, nums.size(5));
+    }
+
+    @Test
+    public void testNullInputs() {
+        Tree nums = new Tree();
+        System.out.println(nums.toString());
+        assertEquals(0, nums.size(nums.getRoot()));
+        nums.insert(1);
+        nums.insert(2);
+        assertEquals(null, nums.getRoot().getSubTree(2));
+        nums.insert(3);
+        nums.insert(4);
+        nums.insert(5);
+        assertEquals(nums.getRoot().getChildren().get(1), nums.getRoot().getSubTree(2));
     }
 
     @Test
@@ -60,13 +75,35 @@ public class TreeTests {
     }
 
     @Test
-    public void testMoveLeftUpToParent() {
+    public void testMoveRightUpToParent() {
         Tree nums = new Tree();
         nums.insert(10);
         nums.insert(5);
         nums.insert(1);
         nums.insert(8);
         nums.insert(11);
+    }
+
+    @Test
+    public void testMoveLeftUpToParent() {
+        Tree nums = new Tree();
+        nums.insert(10);
+        nums.insert(5);
+        nums.insert(1);
+        nums.insert(0);
+        nums.insert(2);
+    }
+
+    @Test
+    public void testMoveMiddleUpToParent() {
+        Tree nums = new Tree();
+        nums.insert(10);
+        nums.insert(5);
+        nums.insert(1);
+        nums.insert(8);
+        nums.insert(11);
+        nums.insert(7);
+        nums.insert(9);
     }
 
     @Test
@@ -159,5 +196,44 @@ public class TreeTests {
         nums.insert(8);
     }
 
+    @Test
+    public void testCascadingSplitAndDuplicates() {
+        Tree t = new Tree();
+        t.insert(1);
+        t.insert(9);
+        t.insert(17);
+        t.insert(11);
+        t.insert(27);
+        t.insert(6);
+        t.insert(3);
+        t.insert(1);
+        t.insert(9);
+        t.insert(17);
+        t.insert(1);
+        t.insert(9);
+        t.insert(17);
+        t.insert(11);
+        t.insert(27);
+
+        assertEquals(7, t.size(9));
+        assertEquals(3, t.size(3));
+        assertEquals(3, t.size(17));
+
+        assertEquals(0, t.size(12));
+        assertEquals(1, t.size(11));
+        assertEquals(0, t.size(14));
+        assertEquals(0, t.size(19));
+        assertEquals(1, t.size(27));
+        assertEquals(0, t.size(21));
+
+        assertEquals(1, t.size(1));
+        assertEquals(0, t.size(0));
+        assertEquals(0, t.size(2));
+
+        assertEquals(1, t.size(6));
+        assertEquals(0, t.size(7));
+        assertEquals(0, t.size(8));
+
+    }
 
 }

@@ -1,6 +1,5 @@
 import java.util.ArrayList;
 import java.util.List;
-import java.util.TreeSet;
 
 interface TwoThreeTree {
     boolean insert(int x);
@@ -37,6 +36,9 @@ public class Tree implements TwoThreeTree {
             } else {
                 current = current.getSubTree(x);
             }
+        }
+        if (x == 4) {
+            System.out.println(this);
         }
         current.split();
 
@@ -130,12 +132,14 @@ public class Tree implements TwoThreeTree {
         }
 
         public Node splitLeft() {
+            // System.out.println("Left:" + keys.get(0));
             Node left = new Node(keys.get(0), parent);
             keys.remove(0);
             return left;
         }
 
         public Node splitRight() {
+            // System.out.println("Right:" + keys.get(keys.size() - 1));
             Node right = new Node(keys.get(keys.size() - 1), parent);
             keys.remove(keys.size() - 1);
             return right;
@@ -208,35 +212,36 @@ public class Tree implements TwoThreeTree {
             if (!needsSplitting()) {
                 return;
             }
-            if (getParent() == null) {
-                // make new nodes
-                Node left = splitLeft();
-                Node right = splitRight();
-                // set their parents to the root
-                left.setParent(this);
-                right.setParent(this);
-                // set left and right of new root
-                children = new ArrayList<>() {{
-                    add(left);
-                    add(right);
-                }};
-                return;
-            }
             // make new nodes
             Node parent = getParent();
             Node left = splitLeft();
             Node right = splitRight();
             // add middle key to parent node
-            parent.addKey(getFirst());
-            // check if current is smallest or largest
-            if (parent.getFirst().intValue() == getFirst().intValue()) {
-                parent.getChildren().add(0, left);
-                parent.getChildren().add(1, right);
+            if (parent == null) {
+                left.setParent(this);
+                right.setParent(this);
+                if (this.getChildren().size() != 0) {
+                    // split my children among left and right
+                    left.getChildren().addAll(getChildren().subList(0, 2));
+                    right.getChildren().addAll(getChildren().subList(2, 4));
+                    getChildren().clear();
+                }
+                children.add(0, left);
+                children.add(1, right);
+                return;
             } else {
-                parent.getChildren().add(left);
-                parent.getChildren().add(right);
+                parent.addKey(getFirst());
+                parent.getChildren().remove(this);
+                // check if current is smallest or largest
+                if (parent.getFirst().intValue() == getFirst().intValue()) {
+                    parent.getChildren().add(0, left);
+                    parent.getChildren().add(1, right);
+                } else {
+                    parent.getChildren().add(left);
+                    parent.getChildren().add(right);
+                }
+                parent.split();
             }
-            parent.split();
         }
 
     }
