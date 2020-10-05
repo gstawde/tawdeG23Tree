@@ -38,42 +38,9 @@ public class Tree implements TwoThreeTree {
                 current = current.getSubTree(x);
             }
         }
-        split(current);
+        current.split();
 
         return true;
-    }
-
-    public void split(Node current) {
-        if (!current.needsSplitting()) {
-            return;
-        }
-        if (current.getParent() == null) {
-            // make new nodes
-            Node left = current.splitLeft();
-            Node right = current.splitRight();
-            // set their parents to the root
-            left.setParent(current);
-            right.setParent(current);
-            // set left and right of new root
-            current.setLeft(left);
-            current.setRight(right);
-            return;
-        }
-        // make new nodes
-        Node parent = current.getParent();
-        Node left = current.splitLeft();
-        Node right = current.splitRight();
-        // add middle key to parent node
-        parent.addKey(current.getFirst());
-        // check if current is smallest or largest
-        if (parent.getFirst().intValue() == current.getFirst().intValue()) {
-            parent.setLeft(left);
-            parent.setMiddle(right);
-        } else {
-            parent.setMiddle(left);
-            parent.setRight(right);
-        }
-        split(parent);
     }
 
     public int size(int x) {
@@ -254,6 +221,40 @@ public class Tree implements TwoThreeTree {
         public int getSize() {
             return keys.size();
         }
+
+        public void split() {
+            if (!needsSplitting()) {
+                return;
+            }
+            if (getParent() == null) {
+                // make new nodes
+                Node left = splitLeft();
+                Node right = splitRight();
+                // set their parents to the root
+                left.setParent(this);
+                right.setParent(this);
+                // set left and right of new root
+                setLeft(left);
+                setRight(right);
+                return;
+            }
+            // make new nodes
+            Node parent = getParent();
+            Node left = splitLeft();
+            Node right = splitRight();
+            // add middle key to parent node
+            parent.addKey(getFirst());
+            // check if current is smallest or largest
+            if (parent.getFirst().intValue() == getFirst().intValue()) {
+                parent.setLeft(left);
+                parent.setMiddle(right);
+            } else {
+                parent.setMiddle(left);
+                parent.setRight(right);
+            }
+            parent.split();
+        }
+
     }
 
 
