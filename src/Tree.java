@@ -1,15 +1,17 @@
+import java.util.ArrayList;
+import java.util.List;
 import java.util.TreeSet;
 
 interface TwoThreeTree {
-    public boolean insert(int x);
+    boolean insert(int x);
 
-    public int size(int x);
+    int size(int x);
 }
 
 
 public class Tree implements TwoThreeTree {
 
-    Node root;
+    private Node root;
 
     public Tree() {
         this.root = null;
@@ -33,8 +35,7 @@ public class Tree implements TwoThreeTree {
             if (current.add(x)) {
                 break;
             } else {
-                Node next = current.getSubTree(x);
-                current = next;
+                current = current.getSubTree(x);
             }
         }
         split(current);
@@ -65,7 +66,7 @@ public class Tree implements TwoThreeTree {
         // add middle key to parent node
         parent.addKey(current.getFirst());
         // check if current is smallest or largest
-        if (parent.getFirst() == current.getFirst()) {
+        if (parent.getFirst().intValue() == current.getFirst().intValue()) {
             parent.setLeft(left);
             parent.setMiddle(right);
         } else {
@@ -124,11 +125,11 @@ public class Tree implements TwoThreeTree {
     class Node {
 
 
-        TreeSet<Integer> keys = new TreeSet<>();
-        Node left = null;
-        Node middle = null;
-        Node right = null;
-        Node parent = null;
+        private List<Integer> keys = new ArrayList<>();
+        private Node left = null;
+        private Node middle = null;
+        private Node right = null;
+        private Node parent;
 
         public Node(int key1, Node parent) {
             keys.add(key1);
@@ -168,10 +169,10 @@ public class Tree implements TwoThreeTree {
         }
 
         public Integer getFirst() {
-            return keys.first();
+            return keys.get(0);
         }
 
-        public TreeSet<Integer> getKeys() {
+        public List<Integer> getKeys() {
             return keys;
         }
 
@@ -190,30 +191,30 @@ public class Tree implements TwoThreeTree {
         }
 
         public Node splitLeft() {
-            Node left = new Node(keys.first(), parent);
-            keys.remove(keys.first());
+            Node left = new Node(keys.get(0), parent);
+            keys.remove(0);
             return left;
         }
 
         public Node splitRight() {
-            Node right = new Node(keys.last(), parent);
-            keys.remove(keys.last());
+            Node right = new Node(keys.get(keys.size() - 1), parent);
+            keys.remove(keys.size() - 1);
             return right;
         }
 
         public Node getSubTree(int key) {
             if (keys.size() == 1) {
                 // 2-node
-                if (key < keys.first()) {
+                if (key < keys.get(0)) {
                     return left;
                 } else {
                     return right;
                 }
             } else {
                 // 3 - node
-                if (key < keys.first()) {
+                if (key < keys.get(0)) {
                     return left;
-                } else if (key < keys.last()) {
+                } else if (key < keys.get(keys.size() - 1)) {
                     return middle;
                 } else {
                     return right;
@@ -223,14 +224,14 @@ public class Tree implements TwoThreeTree {
 
         public boolean contains(int x) {
             if (keys.size() == 1) {
-                return x == keys.first();
+                return x == keys.get(0);
             }
-            return (x == keys.first() || x == keys.last());
+            return (x == keys.get(0) || x == keys.get(keys.size() - 1));
         }
 
         public boolean add(int x) {
             if (isLeaf()) {
-                keys.add(x);
+                addKey(x);
                 return true;
             } else {
                 return false;
@@ -239,6 +240,15 @@ public class Tree implements TwoThreeTree {
 
         public void addKey(int x) {
             keys.add(x);
+            for (int i = 0; i < keys.size() - 1; i++) {
+                for (int j = i + 1; j < keys.size(); j++) {
+                    if (keys.get(i) > keys.get(j)) {
+                        Integer temp = keys.get(i);
+                        keys.set(i, keys.get(j));
+                        keys.set(j, temp);
+                    }
+                }
+            }
         }
 
         public int getSize() {

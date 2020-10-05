@@ -1,6 +1,6 @@
 import org.junit.Test;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.*;
 
 public class TreeTests {
 
@@ -10,6 +10,7 @@ public class TreeTests {
     public void testInsertRoot() { // Also tests empty constructor for Tree class
         Tree nums = new Tree();
         nums.insert(5);
+        System.out.println(nums.toString());
         assertEquals(1, nums.size(5));
     }
 
@@ -113,16 +114,16 @@ public class TreeTests {
         nums.insert(1);
         nums.insert(10);
         nums.insert(5);
-        nums.toString();
+        // nums.toString();
     }
 
     @Test
     public void testIsLeaf2Node() {
         Tree nums = new Tree();
         nums.insert(1);
-        assertEquals(true, nums.getRoot().isLeaf());
+        assertTrue(nums.getRoot().isLeaf());
         nums.insert(2);
-        assertEquals(true, nums.getRoot().isLeaf());
+        assertTrue(nums.getRoot().isLeaf());
     }
 
     @Test
