@@ -56,11 +56,7 @@ public class Tree implements TwoThreeTree {
         if (n == null) {
             return 0;
         }
-        int size = n.getSize();
-        size += size(n.getLeft());
-        size += size(n.getMiddle());
-        size += size(n.getRight());
-        return size;
+        return n.getSize();
     }
 
     public Node search(int x, Node start) {
@@ -84,7 +80,11 @@ public class Tree implements TwoThreeTree {
             return tree;
         }
         tree += n.getKeys();
-        tree += "(" + toString(n.getLeft()) + "," + toString(n.getMiddle()) + "," + toString(n.getRight()) + ")";
+        tree += "(";
+        for (Node c : n.getChildren()) {
+            tree += toString(c) + ",";
+        }
+        tree += ")";
         return tree;
     }
 
@@ -93,9 +93,7 @@ public class Tree implements TwoThreeTree {
 
 
         private List<Integer> keys = new ArrayList<>();
-        private Node left = null;
-        private Node middle = null;
-        private Node right = null;
+        private List<Node> children = new ArrayList<>();
         private Node parent;
 
         public Node(int key1, Node parent) {
@@ -111,30 +109,6 @@ public class Tree implements TwoThreeTree {
             this.parent = parent;
         }
 
-        public Node getLeft() {
-            return left;
-        }
-
-        public void setLeft(Node left) {
-            this.left = left;
-        }
-
-        public Node getMiddle() {
-            return middle;
-        }
-
-        public void setMiddle(Node middle) {
-            this.middle = middle;
-        }
-
-        public Node getRight() {
-            return right;
-        }
-
-        public void setRight(Node right) {
-            this.right = right;
-        }
-
         public Integer getFirst() {
             return keys.get(0);
         }
@@ -143,14 +117,12 @@ public class Tree implements TwoThreeTree {
             return keys;
         }
 
+        public List<Node> getChildren() {
+            return children;
+        }
+
         public boolean isLeaf() {
-            if (keys.size() == 1) {
-                // 2-node
-                return (left == null && right == null);
-            } else {
-                // 3-node
-                return (left == null && middle == null && right == null);
-            }
+            return children.size() == 0;
         }
 
         public boolean needsSplitting() {
@@ -173,18 +145,24 @@ public class Tree implements TwoThreeTree {
             if (keys.size() == 1) {
                 // 2-node
                 if (key < keys.get(0)) {
-                    return left;
+                    return (children.size() > 0) ? children.get(0) : null;
                 } else {
-                    return right;
+                    return (children.size() > 1) ? children.get(1) : null;
                 }
             } else {
                 // 3 - node
                 if (key < keys.get(0)) {
-                    return left;
+                    return (children.size() > 0) ? children.get(0) : null;
                 } else if (key < keys.get(keys.size() - 1)) {
-                    return middle;
+                    return (children.size() > 2) ? children.get(1) : null;
                 } else {
-                    return right;
+                    if (children.size() < 2) {
+                        return null;
+                    } else if (children.size() < 3) {
+                        return children.get(1);
+                    } else {
+                        return children.get(2);
+                    }
                 }
             }
         }
@@ -219,7 +197,11 @@ public class Tree implements TwoThreeTree {
         }
 
         public int getSize() {
-            return keys.size();
+            int s = keys.size();
+            for (Node n : children) {
+                s += n.getSize();
+            }
+            return s;
         }
 
         public void split() {
@@ -234,8 +216,10 @@ public class Tree implements TwoThreeTree {
                 left.setParent(this);
                 right.setParent(this);
                 // set left and right of new root
-                setLeft(left);
-                setRight(right);
+                children = new ArrayList<>() {{
+                    add(left);
+                    add(right);
+                }};
                 return;
             }
             // make new nodes
@@ -246,11 +230,11 @@ public class Tree implements TwoThreeTree {
             parent.addKey(getFirst());
             // check if current is smallest or largest
             if (parent.getFirst().intValue() == getFirst().intValue()) {
-                parent.setLeft(left);
-                parent.setMiddle(right);
+                parent.getChildren().add(0, left);
+                parent.getChildren().add(1, right);
             } else {
-                parent.setMiddle(left);
-                parent.setRight(right);
+                parent.getChildren().add(left);
+                parent.getChildren().add(right);
             }
             parent.split();
         }
