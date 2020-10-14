@@ -67,24 +67,24 @@ public class Tree implements TwoThreeTree {
         return search(x, start.getSubTree(x)); // continue searching with next appropriate subtree based on value of x
     }
 
-    @Override
-    public String toString() {
-        return toString(root);
-    }
-
-    private String toString(Node n) {
-        String tree = "";
-        if (n == null) {
-            return tree;
-        }
-        tree += n.getKeys();
-        tree += "(";
-        for (Node c : n.getChildren()) {
-            tree += toString(c) + ",";
-        }
-        tree += ")";
-        return tree;
-    }
+//    @Override
+//    public String toString() {
+//        return toString(root);
+//    }
+//
+//    private String toString(Node n) {
+//        String tree = "";
+//        if (n == null) {
+//            return tree;
+//        }
+//        tree += n.getKeys();
+//        tree += "(";
+//        for (Node c : n.getChildren()) {
+//            tree += toString(c) + ",";
+//        }
+//        tree += ")";
+//        return tree;
+//    }
 
 
     class Node {
@@ -97,10 +97,6 @@ public class Tree implements TwoThreeTree {
         public Node(int key1, Node parent) {
             keys.add(key1);
             this.parent = parent;
-        }
-
-        public List<Integer> getKeys() {
-            return keys;
         }
 
         public Node getParent() {
@@ -134,14 +130,9 @@ public class Tree implements TwoThreeTree {
         public Node splitLeft() {
             // System.out.println("Left:" + keys.get(0));
             Node left = new Node(keys.get(0), this);
-            switch (getChildren().size()) {
-                case 2:
-                    left.getChildren().add(getChildren().get(0));
-                    break;
-                case 4:
-                    left.getChildren().add(getChildren().get(0));
-                    left.getChildren().add(getChildren().get(1));
-                    break;
+            if (getChildren().size() == 4) {
+                left.getChildren().add(getChildren().get(0));
+                left.getChildren().add(getChildren().get(1));
             }
             for (Node n : left.getChildren()) {
                 n.setParent(left);
@@ -153,14 +144,9 @@ public class Tree implements TwoThreeTree {
         public Node splitRight() {
             // System.out.println("Right:" + keys.get(keys.size() - 1));
             Node right = new Node(keys.get(keys.size() - 1), this);
-            switch (getChildren().size()) {
-                case 2:
-                    right.getChildren().add(getChildren().get(1));
-                    break;
-                case 4:
-                    right.getChildren().add(getChildren().get(2));
-                    right.getChildren().add(getChildren().get(3));
-                    break;
+            if (getChildren().size() == 4) {
+                right.getChildren().add(getChildren().get(2));
+                right.getChildren().add(getChildren().get(3));
             }
             for (Node n : right.getChildren()) {
                 n.setParent(right);
