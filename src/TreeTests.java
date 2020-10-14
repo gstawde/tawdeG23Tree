@@ -1,7 +1,6 @@
 import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
 
 public class TreeTests {
 
@@ -11,22 +10,69 @@ public class TreeTests {
     public void testInsertRoot() { // Also tests empty constructor for Tree class
         Tree nums = new Tree();
         nums.insert(5);
-        System.out.println(nums.toString());
+        //System.out.println(nums.toString());
         assertEquals(1, nums.size(5));
     }
 
     @Test
-    public void testNullInputs() {
+    public void testCascade() {
         Tree nums = new Tree();
-        System.out.println(nums.toString());
-        assertEquals(0, nums.size(nums.getRoot()));
+        nums.insert(50);
+        nums.insert(25);
+        nums.insert(75);
+        nums.insert(15);
+        nums.insert(35);
+        assertEquals(1, nums.size(75));
+        nums.insert(65);
+        assertEquals(2, nums.size(75));
+        nums.insert(100);
+        assertEquals(3, nums.size(75));
+        assertEquals(3, nums.size(25));
+        nums.insert(70);
+        assertEquals(4, nums.size(75));
+        assertEquals(2, nums.size(65));
+        nums.insert(68);
+        assertEquals(5, nums.size(68));
+        assertEquals(5, nums.size(75));
+        assertEquals(1, nums.size(65));
+        nums.insert(90);
+        nums.insert(110);
+        assertEquals(3, nums.size(68));
+        assertEquals(11, nums.size(75));
+    }
+
+    @Test
+    public void testEmptyTree() {
+        Tree nums = new Tree();
+        assertEquals(0, nums.size(5));
+    }
+
+    @Test
+    public void testIncreasing() {
+        Tree nums = new Tree();
+        //System.out.println(nums.toString());
+        assertEquals(0, nums.size(null));
         nums.insert(1);
         nums.insert(2);
-        assertEquals(null, nums.getRoot().getSubTree(2));
         nums.insert(3);
         nums.insert(4);
         nums.insert(5);
-        assertEquals(nums.getRoot().getChildren().get(1), nums.getRoot().getSubTree(2));
+        assertEquals(1, nums.size(5));
+        assertEquals(5, nums.size(2));
+    }
+
+    @Test
+    public void testDecreasing() {
+        Tree nums = new Tree();
+        //System.out.println(nums.toString());
+        assertEquals(0, nums.size(null));
+        nums.insert(5);
+        nums.insert(4);
+        nums.insert(3);
+        nums.insert(2);
+        nums.insert(1);
+        assertEquals(1, nums.size(5));
+        assertEquals(5, nums.size(2));
     }
 
     @Test
@@ -43,6 +89,8 @@ public class TreeTests {
         Tree nums = new Tree();
         nums.insert(5);
         nums.insert(5);
+        assertEquals(1, nums.size(5));
+        assertEquals(0, nums.size(10));
     }
 
     @Test
@@ -52,6 +100,8 @@ public class TreeTests {
         nums.insert(10);
         nums.insert(1);
         nums.insert(11);
+        assertEquals(2, nums.size(11));
+        assertEquals(4, nums.size(5));
     }
 
     @Test
@@ -61,7 +111,7 @@ public class TreeTests {
         nums.insert(10);
         assertEquals(2, nums.size(5));
         assertEquals(2, nums.size(10));
-        assertEquals(5, nums.getRoot().getFirst(), 0.000001);
+        //assertEquals(5, nums.getRoot().getFirst(), 0.000001);
     }
 
     @Test
@@ -71,7 +121,7 @@ public class TreeTests {
         nums.insert(5);
         assertEquals(2, nums.size(5));
         assertEquals(2, nums.size(10));
-        assertEquals(5, nums.getRoot().getFirst(), 0.000001);
+        //assertEquals(5, nums.getRoot().getFirst(), 0.000001);
     }
 
     @Test
@@ -115,7 +165,6 @@ public class TreeTests {
         assertEquals(3, nums.size(5));
         assertEquals(1, nums.size(10));
         assertEquals(1, nums.size(1));
-        assertEquals(5, nums.getRoot().getFirst(), 0.000001);
     }
 
     @Test
@@ -127,7 +176,6 @@ public class TreeTests {
         assertEquals(3, nums.size(5));
         assertEquals(1, nums.size(10));
         assertEquals(1, nums.size(1));
-        assertEquals(5, nums.getRoot().getFirst(), 0.000001);
     }
 
     @Test
@@ -139,7 +187,6 @@ public class TreeTests {
         assertEquals(3, nums.size(5));
         assertEquals(1, nums.size(10));
         assertEquals(1, nums.size(1));
-        assertEquals(5, nums.getRoot().getFirst(), 0.000001);
     }
 
 
@@ -158,9 +205,7 @@ public class TreeTests {
     public void testIsLeaf2Node() {
         Tree nums = new Tree();
         nums.insert(1);
-        assertTrue(nums.getRoot().isLeaf());
         nums.insert(2);
-        assertTrue(nums.getRoot().isLeaf());
     }
 
     @Test
